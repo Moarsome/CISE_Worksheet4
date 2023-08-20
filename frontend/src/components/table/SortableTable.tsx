@@ -1,4 +1,5 @@
 import React from "react";
+import { useTable } from 'react-table';
 
 interface SortableTableProps {
   headers: { key: string; label: string }[];

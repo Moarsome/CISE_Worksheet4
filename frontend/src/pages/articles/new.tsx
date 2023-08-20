@@ -1,5 +1,7 @@
 import { FormEvent, useState } from "react";
+import { addArticle } from '../../lib/articles';
 import formStyles from "../../../styles/Form.module.scss";
+
 
 const NewDiscussion = () => {
   const [title, setTitle] = useState("");
@@ -23,9 +25,34 @@ const NewDiscussion = () => {
         linked_discussion: linkedDiscussion,
       })
     );
-  };
 
-  // Some helper methods for the authors array
+    const res = await fetch("../api", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+            title,
+            authors,
+            source,
+            publication_year: pubYear,
+            doi,
+            summary,
+            linked_discussion: linkedDiscussion,
+        }),
+    });
+    
+    const { msg, success } = await res.json();
+
+    if (success) {
+      setTitle("");
+      setAuthors([""]);
+      setSource("");
+      setPubYear(0);
+      setDoi("");
+      setLinkedDiscussion("");
+    }
+  };
 
   const addAuthor = () => {
     setAuthors(authors.concat([""]));

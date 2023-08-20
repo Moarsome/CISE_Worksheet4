@@ -1,10 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { addArticle } from '../lib/articles';
 
 export default function SubmissionForm() {
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (data: any) => JSON.stringify(data);
+  const onSubmit = (data: any) => addArticle(JSON.stringify(data));
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

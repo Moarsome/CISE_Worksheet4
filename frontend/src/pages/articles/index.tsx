@@ -1,6 +1,6 @@
 import { GetStaticProps, NextPage } from "next";
+import { getArticles } from '../../lib/articles'
 import SortableTable from "../../components/table/SortableTable";
-import data from "../../utils/dummydata.json";
 
 interface ArticlesInterface {
   id: string;
@@ -16,6 +16,14 @@ interface ArticlesInterface {
 type ArticlesProps = {
   articles: ArticlesInterface[];
 };
+
+async function fetchArticles() {
+    const {articles} = await getArticles()
+
+    if (!articles) throw new Error("Failed to get articles!")
+
+    return articles
+}
 
 const Articles: NextPage<ArticlesProps> = ({ articles }) => {
   const headers: { key: keyof ArticlesInterface; label: string }[] = [
@@ -39,7 +47,9 @@ const Articles: NextPage<ArticlesProps> = ({ articles }) => {
 
 export const getStaticProps: GetStaticProps<ArticlesProps> = async (_) => {
   // Map the data to ensure all articles have consistent property names
-  const articles = data.articles.map((article) => ({
+    const data = await fetchArticles()
+
+  const articles = data.map((article : any)=> ({
     id: article.id ?? article._id,
     title: article.title,
     authors: article.authors,
